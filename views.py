@@ -1,7 +1,7 @@
-from utils import load_data, load_template, build_response, verify_and_delete, get_note_from_post
+from utils import load_template, build_response, deletar
 import json
 from database import Database, Note
-import urllib.parse
+from urllib.parse import unquote_plus
 
 DB_NAME = "notes"
 db = Database(DB_NAME)
@@ -16,21 +16,20 @@ def index(request):
         partes = request.split('\n\n')
         corpo = partes[1]
 
-        if verify_and_delete(corpo, db):
+        if deletar(corpo, db):
             return build_response(code=303, reason='See Other', headers='Location: /')
 
-        params = []
+        note = []
         for chave_valor in corpo.split('&'):
             split = chave_valor.split('=')
-            key = urllib.parse.quote_plus(split[0])
-            value = urllib.parse.unquote_plus(split[1])
-            params.append(value)
+            key = unquote_plus(split[0])
+            value = unquote_plus(split[1])
+            note.append(value)
+
+        note = Note(note[0], note[1], note[2])
         
-        note = Note(params[0], params[1], params[2])
         if note.id =="None":
             db.add(note)
-        if note.id == 'deleteNote':
-            db.delete(note.id[0])
 
         return build_response(code=303, reason='See Other', headers='Location: /')
 

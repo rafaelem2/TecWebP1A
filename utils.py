@@ -43,3 +43,8 @@ def build_response(body='', code='200', reason='OK', headers=''):
         response += '\n' + headers + '\n\n' + body
     return response.encode()
 
+def deletar(corpo, database):
+    corpo_split = corpo.split('=')
+    if corpo_split[0] == 'deleteNote':
+        database.delete(corpo_split[1])
+        return True
