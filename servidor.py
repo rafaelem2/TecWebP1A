@@ -1,7 +1,7 @@
 from database import Database
 import socket
 from pathlib import Path
-from utils import extract_route, read_file, build_response
+from utils import extract_route, read_file, build_response, load_template
 from views import index
 
 CUR_DIR = Path(__file__).parent
@@ -31,7 +31,7 @@ while True:
     elif route == '':
         response = index(request)
     else:
-        response = bytes()
+        response = build_response() + load_template('/components/erro.html').encode()
 
     client_connection.sendall(response)
 

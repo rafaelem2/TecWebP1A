@@ -1,25 +1,16 @@
 
-
 def extract_route(request):
-    extracted = request.split()[1]
-    
-    return extracted[1:]  
+    return request.split()[1][1:]
 
 
-def read_file(path):
-    archive = None
-    path_S = str(path)
-
-
-    if path_S[-3:] == ".css" or path_S[-3:] == ".txt" or path_S[-3:] == "html" or path_S[-2:] == ".js":
-        with open("../"+path,'r', encoding="utf-8") as file:
-            archive = file.read()
-            
+def read_file(filepath):
+    if filepath.suffix in ['.txt', '.html', '.css', '.js']:
+        mode = 'rb'
     else:
-        with open(path,"rb") as file:
-            archive = file.read()
+        mode = 'rb'
 
-    return archive
+    with open(filepath, mode=mode) as f:
+        return f.read()
 
 
 def load_data(database,type):
@@ -43,8 +34,3 @@ def build_response(body='', code='200', reason='OK', headers=''):
         response += '\n' + headers + '\n\n' + body
     return response.encode()
 
-def deletar(corpo, database):
-    corpo_split = corpo.split('=')
-    if corpo_split[0] == 'deleteNote':
-        database.delete(corpo_split[1])
-        return True

@@ -1,15 +1,15 @@
-<div class="card">
-	
-  
-	  <form name="deleteNote-{id}" method="post">
-		  <input type="hidden" name="deleteNote" value="{id}">
-		  <button class="deletar" name = {id} onClick="deleteNote({id})" id = "button_{id}" >Deletar</button>
-	  </form>
-  
-	  <h3 class="card-title" name="title-{id}">{title}</h3>
+<div class="card" id="{id}">
+    <h3 class="card-title">{title}</h3>
+    <div class="card-content">
+    <p>
+        {details}
+    </p>
+    </div>
+    <div class="notebtn">
+        <form method="POST">
+            <button name="delete" type="submit" class="card-delete" value="{id}">Deletar</button>
+          </form>
 
-	<div class="card-content">
-		<p name="content-{id}">{details}</p>
-	</div>
+    </div>
 </div>
 
