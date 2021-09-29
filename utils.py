@@ -14,23 +14,23 @@ def read_file(filepath):
 
 
 def load_data(database,type):
-
     data = database.get_all(type)
     return data
 
 
 def load_template(path):
-    with open ("templates/"+path,"r",encoding="utf-8") as file:
-        texto = file.read()
-    return texto
+    with open ("templates/{}".format(path), "r") as arquivo:
+        conteudo = arquivo.read()
+    return conteudo
 
 
-def build_response(body='', code='200', reason='OK', headers=''):
-    args = [str(code), reason]
-    response = 'HTTP/1.1 ' + (' '.join(args))
-    if headers == '':
-        response += '\n\n' + body
-    else:
-        response += '\n' + headers + '\n\n' + body
-    return response.encode()
+
+def build_response(body='', code=200, reason='OK', headers=''):
+    #'HTTP/1.1 200 OK\n\n'.encode() + response)
+    if headers:
+        headers=f"\n{headers}"
+    response = f"HTTP/1.1 {code} {reason}{headers}\n\n{body}".encode()
+    return response
+# print(build_response())
+
 

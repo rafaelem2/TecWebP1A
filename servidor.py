@@ -4,6 +4,21 @@ from pathlib import Path
 from utils import extract_route, read_file, build_response, load_template
 from views import index
 
+def requisicao_faltando_corpo(requisicao):
+    #Trecho de código similar ao feito na função index
+    if requisicao.startswith('POST'):
+        requisicao = requisicao.replace('\r', '')
+        partes = requisicao.split('\n\n')
+
+        #Significa que não tem o corpo da mensagem e tem que pedir a informação
+        if len(partes) <= 1:
+            #Fez split é não possui partes[1]
+            return True
+        elif len(partes[1].strip())==0:
+            #Fez split e possui partes[1], mas partes[1] está vazio
+            return True
+    return False
+
 CUR_DIR = Path(__file__).parent
 SERVER_HOST = '0.0.0.0'
 SERVER_PORT = 8080
@@ -22,16 +37,25 @@ while True:
 
     request = client_connection.recv(1024).decode()
     print(request)
+    if len(request.strip())>0:
 
-    route = extract_route(request)
+            #Modificação para bug de requisição sem corpo
+            if requisicao_faltando_corpo(request):
+                print("estava faltando o corpo")
+                body = client_connection.recv(1024).decode()
+                request=request+body
 
-    filepath = CUR_DIR / route
-    if filepath.is_file():
-        response = build_response() + read_file(filepath)
-    elif route == '':
-        response = index(request)
-    else:
-        response = build_response() + load_template('/components/erro.html').encode()
+            print(request)
+
+            route = extract_route(request)
+
+            filepath = CUR_DIR / route
+            if filepath.is_file():
+                response = build_response() + read_file(filepath)
+            elif route == '':
+                response = index(request)
+            else:
+                response = build_response() + load_template('/components/erro.html').encode()
 
     client_connection.sendall(response)
 

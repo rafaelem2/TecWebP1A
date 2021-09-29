@@ -31,8 +31,9 @@ class Database():
 
 
     def delete(self, note_id):
-        self.conn.execute(f'DELETE FROM note WHERE id = {note_id}')
-        self.conn.commit()  
+        delete_command = f"DELETE FROM note WHERE id = {note_id};"
+        self.cursor = self.conn.execute(delete_command)
+        self.conn.commit()
 
 
         
